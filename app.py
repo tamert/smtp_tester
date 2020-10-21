@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    return render_template("index.html", url=request.url_root)
+    return render_template("smtp.html", url=request.url_root)
 
 
 @app.route("/check", methods=["POST"])

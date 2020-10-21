@@ -35,16 +35,16 @@
                                    placeholder="Enter Mail Password">
                         </div>
                         <div class="form-group">
-                            <label for="mail_sender">Mail Sender</label>
+                            <label for="mail_sender">From Address</label>
                             <input type="email" required class="form-control" name="mail_sender"
                                    id="mail_sender"
                                    placeholder="Enter Mail Sender Address">
                         </div>
                         <div class="form-group">
-                            <label for="from_to">From To</label>
+                            <label for="from_to">Send To</label>
                             <input type="email" required class="form-control" name="from_to"
                                    id="from_to"
-                                   placeholder="Enter From Address">
+                                   placeholder="Enter Address">
                         </div>
 
 
@@ -110,12 +110,12 @@
                             $(".in-alert  .alert-success").alert();
                         }
                         $("#check-submit").removeAttr("disabled");
-                        $("#check-submit").text("check");
+                        $("#check-submit").text("Check");
 
                     },
                     error: function (XMLHttpRequest, textStatus, errorThrown) {
                         $("#check-submit").removeAttr("disabled");
-                        $("#check-submit").text("check");
+                        $("#check-submit").text("Check");
                         var err = eval("(" + XMLHttpRequest.responseText + ")");
                         $(".in-alert").html(
                             "                            <div class=\"alert alert-warning alert-dismiss fade show\" role=\"alert\">\n" +
