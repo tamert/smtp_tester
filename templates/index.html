@@ -1,0 +1,138 @@
+{% extends "layout.html" %}
+{% block body %}
+    <div class="row">
+
+        <div class="col-md-12 mt-2">
+            <div class="card">
+                <div class="card-header">Mail Settings</div>
+                <div class="card-body">
+                    <form action="/check" id="check-form" method="post">
+                        <div class="form-group">
+                            <label for="mail_server">Mail Server</label>
+                            <input type="text" required class="form-control" name="mail_server"
+                                   id="mail_server"
+                                   placeholder="Enter Mail Server">
+                        </div>
+                        <div class="form-group">
+                            <label for="mail_port">Port</label>
+                            <input type="text" required class="form-control" value="465" name="mail_port"
+                                   id="mail_port"
+                                   placeholder="Enter Mail Server">
+                        </div>
+                        <p><label>
+                            <input type="checkbox" name="use_tls" value="1"/>
+                        </label> Use TLS?</p>
+                        <div class="form-group">
+                            <label for="mail_username">Mail Username</label>
+                            <input type="text" required class="form-control" name="mail_username"
+                                   id="mail_username"
+                                   placeholder="Enter Mail Username">
+                        </div>
+                        <div class="form-group">
+                            <label for="mail_password">Mail Password</label>
+                            <input type="text" required class="form-control" name="mail_password"
+                                   id="mail_password"
+                                   placeholder="Enter Mail Password">
+                        </div>
+                        <div class="form-group">
+                            <label for="mail_sender">Mail Sender</label>
+                            <input type="email" required class="form-control" name="mail_sender"
+                                   id="mail_sender"
+                                   placeholder="Enter Mail Sender Address">
+                        </div>
+                        <div class="form-group">
+                            <label for="from_to">From To</label>
+                            <input type="email" required class="form-control" name="from_to"
+                                   id="from_to"
+                                   placeholder="Enter From Address">
+                        </div>
+
+
+                        <button type="submit" id="check-submit" class="btn mt-2 btn-success">Check</button>
+
+                        <div class="in-alert mt-2">
+
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script type="application/javascript">
+        $.fn.serializeObject = function () {
+            var o = {};
+            var a = this.serializeArray();
+            $.each(a, function () {
+                if (o[this.name]) {
+                    if (!o[this.name].push) {
+                        o[this.name] = [o[this.name]];
+                    }
+                    o[this.name].push(this.value || '');
+                } else {
+                    o[this.name] = this.value || '';
+                }
+            });
+            return o;
+        };
+
+        $(document).ready(function () {
+            $("#check-form").submit(function (e) {
+                $("#check-submit").attr("disabled", "disabled");
+                $("#check-submit").text("Sending...");
+
+                e.preventDefault();
+                var form = $(this);
+                var url = form.attr('action');
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    json: true,
+                    data: JSON.stringify(form.serializeObject()),
+                    contentType: "application/json; charset=utf-8",
+                    traditional: true,
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.success) {
+                            $(".in-alert").html(
+                                "<div class=\"alert alert-success  alert-dismiss fade show\" role=\"alert\">\n" +
+                                "                                Mail Settings are successful!\n" +
+                                "                                <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">\n" +
+                                "                                    <span aria-hidden=\"true\">&times;</span>\n" +
+                                "                                </button>\n" +
+                                "                            </div>\n"
+                            );
+                            $(".in-alert  .alert-success").alert();
+                        }
+                        $("#check-submit").removeAttr("disabled");
+                        $("#check-submit").text("check");
+
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        $("#check-submit").removeAttr("disabled");
+                        $("#check-submit").text("check");
+                        var err = eval("(" + XMLHttpRequest.responseText + ")");
+                        $(".in-alert").html(
+                            "                            <div class=\"alert alert-warning alert-dismiss fade show\" role=\"alert\">\n" +
+                            "                                Settings incorrect! <br>" +
+                            "                                " + err.message + " \n" +
+                            "                                <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">\n" +
+                            "                                    <span aria-hidden=\"true\">&times;</span>\n" +
+                            "                                </button>\n" +
+                            "                            </div>"
+                        );
+                        $(".in-alert  .alert-warning").alert();
+
+                    }
+                });
+
+
+            });
+        });
+    </script>
+{% endblock %}
